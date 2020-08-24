@@ -1,10 +1,12 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
 
 <div class="container">
     <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
 
         <h1>
-            Home Article Django + Viewjs
+            Article Django + Vue.js
         </h1>
     </div>
 
@@ -12,8 +14,34 @@
         <div class="row">
             <h1>
                 List of Articles
-                <button class="btn btn-success" data-toggle="modal" data-target="#addArticleModal"> ADD ARTICLE</button>
             </h1>
+            <hr style="margin-bottom: 10px; margin-top: 10px;" />
+            
+            
+            <form action="." v-on:submit.prevent="getArticles()">
+                <div class="input-group mb-3">
+                    <input type="text" 
+                    v-model="search"
+                    class="form-control" 
+                    placeholder="Search by title" 
+                    aria-label="Search by title" 
+                    aria-describedby="search by title">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-info" type="submit">
+                            <i class="fa fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="row col-12 mt-5 mb-2">
+                <button 
+                    class="btn btn-primary" 
+                    data-toggle="modal" 
+                    data-target="#addArticleModal"> 
+                        ADD ARTICLE
+                    <i class="ml-3 fa fa-plus"></i>
+                    </button>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -143,6 +171,7 @@
         el: '#app',
         delimiters: ['${', '}'],
         data: {
+            search: "",
             baseURL: "/api/article/",
             articles: [],
             loading: false,
@@ -159,7 +188,11 @@
         methods: {
             getArticles: function(){
                 this.loading = true
-                this.$http.get(`${this.baseURL}`)
+                let api_url = this.baseURL
+                if (this.search !== "" || this !== null){
+                    api_url = `${this.baseURL}?search=${this.search}`
+                }
+                this.$http.get(`${api_url}`)
                     .then((response) => {
                         this.loading = false;
                         this.articles = response.data
@@ -185,6 +218,9 @@
                     .then(response => {
                         this.loading = false
                         $("#addArticleModal").modal("hide")
+                        this.newArticle ={
+                            'title': null, 'body': null
+                        }
                         this.getArticles()
                     })
             },

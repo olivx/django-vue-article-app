@@ -41,6 +41,8 @@ INSTALLED_APPS = [
 
     "core",
     "rest_framework",
+    "django_filters",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -117,6 +119,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

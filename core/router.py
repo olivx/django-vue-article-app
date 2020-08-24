@@ -4,4 +4,4 @@ from .views import ArticleSviewSet
 
 router = routers.DefaultRouter() 
 
-router.register(r"article", ArticleSviewSet)
+router.register(r"article", ArticleSviewSet, basename='article')
