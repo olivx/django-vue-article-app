@@ -16,8 +16,8 @@
                 List of Articles
             </h1>
             <hr style="margin-bottom: 10px; margin-top: 10px;" />
-            
-            
+
+
             <form action="." v-on:submit.prevent="getArticles()">
                 <div class="input-group mb-3">
                     <input type="text" 
@@ -47,7 +47,6 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Body</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -56,12 +55,13 @@
                     <tr v-for="article in articles">
                         <th scope="row"> ${article.pk}</th>
                         <th scope="row"> ${article.title} </th>
-                        <th scope="row"> ${article.body} </th>
+
                         <th scope="row">
                             <button class="btn btn-warning" v-on:click="getArticle(article.pk)">
                                 Edit
                             </button>
                         </th>
+
                         <th scope="row">
                             <button class="btn btn-danger" v-on:click="deleteArticle(article)">
                                 Delete
@@ -75,7 +75,7 @@
     
         
         <div id="addArticleModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">ADD Article</h5>
@@ -95,15 +95,10 @@
                             id="id_title"
                             class="form-control">
 
-                            <label for="id_body">Body</label>
-                            <textarea
-                            v-model="newArticle.body"
-                            name="body"
-                            id="id_body"
-                            cols="30"
-                            rows="10"
-                            required="required"
-                            class="form-control"></textarea>
+                            <trumbowyg  id="id_body"
+                                v-model="newArticle.body" 
+                                class="editor">
+                            </trumbowyg>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -117,7 +112,7 @@
         </div>
     
         <div id="updateArticleModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Update Article</h5>
@@ -138,14 +133,10 @@
                             class="form-control">
         
                             <label for="id_body">Body</label>
-                            <textarea 
-                            v-model="currentArticle.body"
-                            name="body" 
-                            id="id_body" 
-                            cols="30" 
-                            rows="10" 
-                            required="required"
-                            class="form-control"></textarea>
+                            <trumbowyg  id="id_body"
+                                v-model="currentArticle.body" 
+                                class="editor">
+                            </trumbowyg>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -167,10 +158,14 @@
 
 {% block js_custom %}
     <script type="text/javascript">
+    Vue.component('Trumbowyg', VueTrumbowyg.default);
     new Vue({
         el: '#app',
         delimiters: ['${', '}'],
         data: {
+            config: {
+                //http://alex-d.github.io/Trumbowyg/documentation.html#basic-options
+            },
             search: "",
             baseURL: "/api/article/",
             articles: [],
@@ -222,6 +217,9 @@
                             'title': null, 'body': null
                         }
                         this.getArticles()
+                    }).catch( err => {
+                        $("#addArticleModal").modal("hide")
+                        console.log(err)
                     })
             },
             updateArticle: function(){
@@ -234,6 +232,7 @@
                         this.getArticles()
                         console.log(this.articles)
                     }).catch( err => {
+                        $("#updateArticleModal").modal("hide")
                         console.log(err)
                     })
             },
