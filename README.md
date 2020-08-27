@@ -16,7 +16,7 @@ this a just example how this technologies can work on sample way.
 - paginate
 - dynamically ordering
 - select row and show data
-- add text editor to manage body of article
+- ~~add text editor to manage body of article~~
 
 # how i can run this project
 
